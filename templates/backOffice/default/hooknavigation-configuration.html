@@ -25,7 +25,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    {if $success}
+                    {if isset($success)}
                         <div class="alert alert-success">
                             {intl l="Configuration correctly saved" d="hooknavigation.bo.default"}
                         </div>
@@ -56,8 +56,10 @@
                                     {if $required}<span class="required">*</span>{/if}
 
                                     {form_error form=$form field="footer_body_folder_id"}
+                                    {if isset($message)}
                                     <br />
                                     <span class="error">{$message}</span>
+                                    {/if}
                                     {/form_error}
                                 </label>
 
@@ -83,8 +85,10 @@
                                     {if $required}<span class="required">*</span>{/if}
 
                                     {form_error form=$form field="footer_bottom_folder_id"}
+                                    {if isset($message)}
                                     <br />
                                     <span class="error">{$message}</span>
+                                    {/if}
                                     {/form_error}
                                 </label>
 
