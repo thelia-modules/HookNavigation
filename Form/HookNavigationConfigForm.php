@@ -13,6 +13,7 @@
 namespace HookNavigation\Form;
 
 use HookNavigation\HookNavigation;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Thelia\Form\BaseForm;
 
@@ -33,7 +34,7 @@ class HookNavigationConfigForm extends BaseForm
         $this->formBuilder
             ->add(
                 'footer_body_folder_id',
-                'number',
+                NumberType::class,
                 [
                     'constraints' => [
                         new NotBlank(),
@@ -43,7 +44,7 @@ class HookNavigationConfigForm extends BaseForm
             )
             ->add(
                 'footer_bottom_folder_id',
-                'number',
+                NumberType::class,
                 [
                     'constraints' => [
                         new NotBlank(),

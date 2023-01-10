@@ -15,6 +15,8 @@ namespace HookNavigation\Controller;
 use HookNavigation\HookNavigation;
 use HookNavigation\Model\Config\HookNavigationConfigValue;
 use Thelia\Controller\Admin\BaseAdminController;
+use Thelia\Core\HttpFoundation\Session\Session;
+use Thelia\Core\Template\ParserContext;
 use Thelia\Form\Exception\FormValidationException;
 
 /**
@@ -24,18 +26,18 @@ use Thelia\Form\Exception\FormValidationException;
  */
 class HookNavigationConfigController extends BaseAdminController
 {
-    public function defaultAction()
+    public function defaultAction(Session $session)
     {
         $bodyConfig = HookNavigation::getConfigValue(HookNavigationConfigValue::FOOTER_BODY_FOLDER_ID);
         $bottomConfig = HookNavigation::getConfigValue(HookNavigationConfigValue::FOOTER_BOTTOM_FOLDER_ID);
 
-        $this->getSession()->getFlashBag()->set('bodyConfig', $bodyConfig);
-        $this->getSession()->getFlashBag()->set('bottomConfig', $bottomConfig);
+        $session->getFlashBag()->set('bodyConfig', $bodyConfig ?? 0);
+        $session->getFlashBag()->set('bottomConfig', $bottomConfig ?? 0);
 
         return $this->render('hooknavigation-configuration');
     }
 
-    public function saveAction()
+    public function saveAction(Session $session,ParserContext $parserContext)
     {
         $baseForm = $this->createForm('hooknavigation.configuration');
 
@@ -60,16 +62,16 @@ class HookNavigationConfigController extends BaseAdminController
             $baseForm->setErrorMessage($errorMessage);
 
             // Send the form and the error to the parser
-            $this->getParserContext()
+            $parserContext
                 ->addForm($baseForm)
                 ->setGeneralError($errorMessage)
             ;
         } else {
-            $this->getParserContext()
+            $parserContext
                 ->set('success', true)
             ;
         }
 
-        return $this->defaultAction();
+        return $this->defaultAction($session);
     }
 }
