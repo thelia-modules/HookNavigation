@@ -13,7 +13,7 @@
 namespace HookNavigation\Hook;
 
 use HookNavigation\HookNavigation;
-use HookNavigation\Model\Config\HookNavigationConfigValue;
+use HookNavigation\Model\Config\Base\HookNavigationConfigValue;
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
 use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Hook\BaseHook;
@@ -30,7 +30,7 @@ class FrontHook extends BaseHook
         $bodyConfig = HookNavigation::getConfigValue(HookNavigationConfigValue::FOOTER_BODY_FOLDER_ID);
 
         $content = trim($this->render('main-footer-body.html', ['bodyFolderId' => $bodyConfig]));
-        if ('' != $content) {
+        if ('' !== $content) {
             $event->add([
                 'id' => 'navigation-footer-body',
                 'class' => 'links',

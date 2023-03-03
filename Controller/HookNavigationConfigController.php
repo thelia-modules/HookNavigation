@@ -12,10 +12,12 @@
 
 namespace HookNavigation\Controller;
 
+use Exception;
 use HookNavigation\HookNavigation;
-use HookNavigation\Model\Config\HookNavigationConfigValue;
+use HookNavigation\Model\Config\Base\HookNavigationConfigValue;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Form\Exception\FormValidationException;
+use function is_bool;
 
 /**
  * Class HookNavigationConfigController.
@@ -29,8 +31,8 @@ class HookNavigationConfigController extends BaseAdminController
         $bodyConfig = HookNavigation::getConfigValue(HookNavigationConfigValue::FOOTER_BODY_FOLDER_ID);
         $bottomConfig = HookNavigation::getConfigValue(HookNavigationConfigValue::FOOTER_BOTTOM_FOLDER_ID);
 
-        $this->getSession()->getFlashBag()->set('bodyConfig', $bodyConfig);
-        $this->getSession()->getFlashBag()->set('bottomConfig', $bottomConfig);
+        $this->getSession()->getFlashBag()->set('bodyConfig', $bodyConfig ?? '');
+        $this->getSession()->getFlashBag()->set('bottomConfig', $bottomConfig ?? '');
 
         return $this->render('hooknavigation-configuration');
     }
@@ -45,14 +47,14 @@ class HookNavigationConfigController extends BaseAdminController
             $form = $this->validateForm($baseForm);
             $data = $form->getData();
 
-            HookNavigation::setConfigValue(HookNavigationConfigValue::FOOTER_BODY_FOLDER_ID, \is_bool($data['footer_body_folder_id']) ? (int) ($data['footer_body_folder_id']) : $data['footer_body_folder_id']);
-            HookNavigation::setConfigValue(HookNavigationConfigValue::FOOTER_BOTTOM_FOLDER_ID, \is_bool($data['footer_bottom_folder_id']) ? (int) ($data['footer_bottom_folder_id']) : $data['footer_bottom_folder_id']);
+            HookNavigation::setConfigValue(HookNavigationConfigValue::FOOTER_BODY_FOLDER_ID, is_bool($data['footer_body_folder_id']) ? (int) ($data['footer_body_folder_id']) : $data['footer_body_folder_id']);
+            HookNavigation::setConfigValue(HookNavigationConfigValue::FOOTER_BOTTOM_FOLDER_ID, is_bool($data['footer_bottom_folder_id']) ? (int) ($data['footer_bottom_folder_id']) : $data['footer_bottom_folder_id']);
         } catch (FormValidationException $ex) {
             // Invalid data entered
             $errorMessage = $this->createStandardFormValidationErrorMessage($ex);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             // Any other error
-            $errorMessage = $this->getTranslator()->trans('Sorry, an error occurred: %err', ['%err' => $ex->getMessage()], [], HookNavigation::MESSAGE_DOMAIN);
+            $errorMessage = $this->getTranslator()->trans('Sorry, an error occurred: %err', ['%err' => $ex->getMessage()], null, HookNavigation::MESSAGE_DOMAIN);
         }
 
         if (null !== $errorMessage) {
